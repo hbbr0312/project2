@@ -26,10 +26,8 @@ import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -46,10 +44,7 @@ import java.util.HashMap;
  */
 public class Fragment1 extends Fragment {
 
-    private  Button loadContacts;
     private ListView lv;
-
-
     ArrayList<HashMap<String, String>> contactList;
 
     public Fragment1() {
@@ -62,65 +57,46 @@ public class Fragment1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-//////////////
+        Log.w("fragment1","onCreateView");
         setHasOptionsMenu(true);
-
         View view = inflater.inflate(R.layout.fragment_fragment1, container, false);
-
         contactList = new ArrayList<>();
-
         lv = (ListView) view.findViewById(R.id.ListView);
-
-
-
-        //승인나면
-        if (askForContactPermission(getActivity())) {
-            loadContacts();
-        }
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Button loadBt = (Button) view.findViewById(R.id.load);
+        loadBt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                //Data data = contactList.get(position);
-
-                HashMap<String,String> data = contactList.get(position);
-//값 전달
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + data.get("mobile")));
-                Bundle bundle = new Bundle();
-                bundle.putString(ContactsContract.Intents.Insert.PHONE, data.get("mobile"));
-                intent.putExtras(bundle);
-
-                startActivity(intent);
+            public void onClick(View v) {
+                Log.w("fragment1","click!");
+                if(askForContactPermission(getActivity()))
+                    loadContacts();
             }
         });
 
+        if (askForContactPermission(getActivity())) {
+                loadContacts();
+                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //Data data = contactList.get(position);
+                        HashMap<String,String> data = contactList.get(position);//값 전달
+                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + data.get("mobile")));
+                        Bundle bundle = new Bundle();
+                        bundle.putString(ContactsContract.Intents.Insert.PHONE, data.get("mobile"));
+                        intent.putExtras(bundle);
+
+                        startActivity(intent);
+                    }
+                });
+        }
+
+
+
+        //Log.e("fragment1","permission is "+askForContactPermission(getActivity()));
+
+        //permission = askForContactPermission(getActivity());
+
         return view;
     }
-
-    /**추가*/
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-    }
-
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        //return super.onOptionsItemSelected(item);
-        switch (item.getItemId()) {
-            case R.id.refresh:
-                // User chose the "Settings" item, show the app settings UI...
-                loadContacts();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
-
 
     //연락처 불러오기
     private void loadContacts() {
@@ -199,11 +175,6 @@ public class Fragment1 extends Fragment {
                 }
 
                 emails.close();
-
-
-
-
-
 
                 //showSelectedNumber(type, number, name, bitmap);
             }
@@ -302,13 +273,8 @@ public class Fragment1 extends Fragment {
         return rBitmap;
     }
 
-
-
-
-    //////////////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////이 아래로는 permission
+    //*contact permission*//
     public static final int PERMISSION_REQUEST_CONTACT = 123;
-
     public boolean askForContactPermission(final Context context){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
@@ -359,7 +325,6 @@ public class Fragment1 extends Fragment {
             return true;
         }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -368,7 +333,7 @@ public class Fragment1 extends Fragment {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    loadContacts();
+                    //loadContacts();
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
 
@@ -380,16 +345,7 @@ public class Fragment1 extends Fragment {
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
-
-
-
-
-
-
 
 }

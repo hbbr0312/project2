@@ -1,6 +1,7 @@
 package com.example.user.test;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,14 +56,10 @@ public class ProjectActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.project_main);
 
-        requestForPermission();
+        //requestForPermission();
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         //loadJSON()함수가 수행되는 후 ArrayList<ItemData> address에는 ItemData로 채워져 있음//
-
-
         //BasePath = mediaStorageDir.getPath();
-
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText("Tab one"));
@@ -75,6 +72,7 @@ public class ProjectActivity extends AppCompatActivity{
         // Creating TabPagerAdapter adapter
         TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(1);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         // Set TabSelectedListener
@@ -94,15 +92,17 @@ public class ProjectActivity extends AppCompatActivity{
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
+
         });
 
         tabLayout.setupWithViewPager(viewPager);
 
         //탭에 아이콘 넣는 부분//
         tabLayout.getTabAt(0).setIcon(R.drawable.agenda);
-        tabLayout.getTabAt(1).setIcon(R.drawable.photoalbum);
+        tabLayout.getTabAt(2).setIcon(R.drawable.photoalbum);
         //tabLayout.getTabAt(2).setIcon(R.drawable.player);
     }
+
 }
 
 

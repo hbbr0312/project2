@@ -13,12 +13,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -26,18 +24,32 @@ public class Fragment2 extends Fragment {
     private GridView gv;
     public Fragment2(){
     }
-
     View v;
-    ViewGroup cont;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fragment2, container, false);
+        v=view;
         Log.i("fragment2","onCreateView");
         setHasOptionsMenu(true);
+
         gv = (GridView) view.findViewById(R.id.ImgGridView);
+        Button loadI = (Button) view.findViewById(R.id.loadi);
+        loadI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.w("fragment2","click!");
+                if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) loadImage(v,getActivity());
+            }
+        });
+
+
         if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+            Log.e("permission Image","true");
             loadImage(view,getActivity());
         }
+
+
+
         return view;
     }
 
@@ -51,35 +63,15 @@ public class Fragment2 extends Fragment {
         });
     }
 
-
-    /**추가*/
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
-        super.onCreateOptionsMenu(menu,inflater);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId()) {
-            case R.id.refresh:
-                loadImage(v,getActivity());
-                //onCreateView(inf,cont,saved);
-                //디버깅용 삭제
-
-                // User chose the "Settings" item, show the app settings UI...
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
     /*Permission*/
+
+
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        Log.i("fragment2","onRequestPermissionsResult");
+                                           String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -92,10 +84,12 @@ public class Fragment2 extends Fragment {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions,
                         grantResults);
+
+                // other 'case' lines to check for other
+                // permissions this app might request
         }
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     public boolean checkPermissionREAD_EXTERNAL_STORAGE(
             final Context context) {
@@ -107,8 +101,8 @@ public class Fragment2 extends Fragment {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(
                         (Activity) context,
                         Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    showDialog("External storage", context,
-                            Manifest.permission.READ_EXTERNAL_STORAGE);
+                    //showDialog("External storage", context,
+                    //Manifest.permission.READ_EXTERNAL_STORAGE);
 
                 } else {
                     ActivityCompat

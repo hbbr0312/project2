@@ -21,7 +21,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -62,6 +64,20 @@ public class MainActivity extends AppCompatActivity {
         callbackManager = CallbackManager.Factory.create();
         LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
 
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        final boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+
+        Button maintain = (Button) findViewById(R.id.button2);
+        maintain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isLoggedIn){
+                    nextActivity();
+                }
+                else Toast.makeText(MainActivity.this,"Login information does not exist.",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -85,9 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 graphRequest.setParameters(parameters);
                 graphRequest.executeAsync();
 
-                Intent intent = new Intent(getApplicationContext(),ProjectActivity.class);
-                intent.putExtra("id",user_id);
-                startActivity(intent);
+                nextActivity(); //--> ProjectActivity로
             }
 
             @Override
@@ -101,8 +115,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
 
+    }
+    //projectActivity로 넘어가는 함수//로그인했을때
+    public void nextActivity(){
+        Intent intent = new Intent(getApplicationContext(),ProjectActivity.class);
+        intent.putExtra("id",user_id);
+        startActivity(intent);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -178,14 +198,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
-
-
-
-
-
-
-
 }
 
 
