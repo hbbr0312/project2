@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -103,7 +104,7 @@ public class DisplayPhoto extends AppCompatActivity {
             public void onClick(View view) {
                 // TODO : click event
                 //new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/");
-                new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/downloadimage/hbbr");
+                new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/uploadimage/hbbr1");
                 Log.e("======================","buttonclickc");
                 /*
                 String url = "http://socrip4.kaist.ac.kr:3880/upload11";
@@ -124,8 +125,12 @@ public class DisplayPhoto extends AppCompatActivity {
             try {
                 //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.accumulate("user_id", "androidTest");
-                jsonObject.accumulate("name", encodedImage);
+                JSONArray jsonArray = new JSONArray();
+                JSONObject img = new JSONObject();
+
+                img.accumulate("name","spongebob");
+                img.accumulate("img",encodedImage);
+                jsonObject.accumulate("images", jsonArray);
 
                 HttpURLConnection con = null;
                 BufferedReader reader = null;
@@ -160,7 +165,7 @@ public class DisplayPhoto extends AppCompatActivity {
                     InputStream stream = con.getInputStream();
 
 
-                    reader = new BufferedReader(new InputStreamReader(stream));
+                    /*reader = new BufferedReader(new InputStreamReader(stream));
 
                     StringBuffer buffer = new StringBuffer();
 
@@ -168,8 +173,8 @@ public class DisplayPhoto extends AppCompatActivity {
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
                     } ////여기까지 안가고 에러 뜸
-                    Log.e("======3======",buffer.toString());
-                    return buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
+                    Log.e("======3======",buffer.toString());*/
+                    return "ok";//buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
 
                 } catch (MalformedURLException e){
                     e.printStackTrace();
@@ -212,57 +217,9 @@ public class DisplayPhoto extends AppCompatActivity {
             ByteArrayInputStream inStream = new ByteArrayInputStream(bytedata);
             Bitmap bitmap = BitmapFactory.decodeStream(inStream) ;
             //imageView.setImageBitmap(bitmap);
-
-
-            //textView.setText(result);//서버로 부터 받은 값을 출력해주는 부
         }
     }
 
 
-    public static void postData(Bitmap imageToSend) {
-        try
-        {
-            URL url = new URL("http://socrip4.kaist.ac.kr:3980/uploadimage/hbbr");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
 
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("Cache-Control", "no-cache");
-
-            conn.setReadTimeout(35000);
-            conn.setConnectTimeout(35000);
-
-            // directly let .compress write binary image data
-            // to the output-stream
-            OutputStream os = conn.getOutputStream();
-            imageToSend.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            os.flush();
-            os.close();
-
-            System.out.println("Response Code: " + conn.getResponseCode());
-
-            InputStream in = new BufferedInputStream(conn.getInputStream());
-            Log.d("sdfs", "sfsd");
-            BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(in));
-            String line = "";
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((line = responseStreamReader.readLine()) != null)
-                stringBuilder.append(line).append("\n");
-            responseStreamReader.close();
-
-            String response = stringBuilder.toString();
-            System.out.println(response);
-
-            conn.disconnect();
-        }
-        catch(MalformedURLException e) {
-            e.printStackTrace();
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

@@ -70,7 +70,7 @@ public class MainActivity extends Activity {
         textView = (TextView) findViewById(R.id.tview) ;
         imageView = (ImageView) findViewById(R.id.imageview);
 
-        path = Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera/IMG_20190106_061606.jpg";//"/Download/spongebob";
+        path = Environment.getExternalStorageDirectory().toString() + "/Download/spongebob";
         //"/DCIM/Camera/spongebob.jpg";
         File file = new File(path);
 
@@ -85,15 +85,17 @@ public class MainActivity extends Activity {
         byte[] bytedata = Base64.decode(encodedImage,0);
         ByteArrayInputStream inStream = new ByteArrayInputStream(bytedata);
         Bitmap bitmap = BitmapFactory.decodeStream(inStream) ;
-        //imageView.setImageBitmap(bitmap);
-
-        new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/downloadimage/hbbr");
+        imageView.setImageBitmap(bitmap);
+        //postData(bitmap);
+        new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/upload11");
 
         button.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 // TODO : click event
+
+
                 //new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/");
                 Log.e("======================","buttonclickc");
                 /*
@@ -122,9 +124,8 @@ public class MainActivity extends Activity {
 
                 try{
                     //URL url = new URL("http://192.168.25.16:3000/users");
-                    URL url = new URL(urls[0]);
+                    URL url = new URL("http://socrip4.kaist.ac.kr:3980/uploadimage/hbbr");
                     //연결을 함
-
                     con = (HttpURLConnection) url.openConnection();
 
 
@@ -146,10 +147,12 @@ public class MainActivity extends Activity {
                     writer.flush();
                     writer.close();//버퍼를 받아줌
 
+
+                    //url = new URL("http://socrip4.kaist.ac.kr:3980/downloadimage/hbbr");
+                    //con = (HttpURLConnection) url.openConnection();
                     //서버로 부터 데이터를 받음
                     InputStream stream = con.getInputStream();
-
-
+                    /*
                     reader = new BufferedReader(new InputStreamReader(stream));
 
                     StringBuffer buffer = new StringBuffer();
@@ -159,7 +162,8 @@ public class MainActivity extends Activity {
                         buffer.append(line);
                     } ////여기까지 안가고 에러 뜸
                     Log.e("======3======",buffer.toString());
-                    return buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
+*/
+                    return "OK";//buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
 
                 } catch (MalformedURLException e){
                     e.printStackTrace();
