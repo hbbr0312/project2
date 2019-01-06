@@ -65,13 +65,13 @@ public class MainActivity extends Activity {
 
         requestForPermission();
 
-
+        Log.e("main","onCreateView");
         button = (Button) findViewById(R.id.bttn);
         textView = (TextView) findViewById(R.id.tview) ;
         imageView = (ImageView) findViewById(R.id.imageview);
 
-        path = Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera/IMG_20190104_115408.jpg";
-
+        path = Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera/IMG_20190106_061606.jpg";//"/Download/spongebob";
+        //"/DCIM/Camera/spongebob.jpg";
         File file = new File(path);
 
         bm = BitmapFactory.decodeFile(path);
@@ -85,19 +85,16 @@ public class MainActivity extends Activity {
         byte[] bytedata = Base64.decode(encodedImage,0);
         ByteArrayInputStream inStream = new ByteArrayInputStream(bytedata);
         Bitmap bitmap = BitmapFactory.decodeStream(inStream) ;
+        //imageView.setImageBitmap(bitmap);
 
-
+        new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/downloadimage/hbbr");
 
         button.setOnClickListener(new Button.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 // TODO : click event
-
-
-
-                new JSONTask().execute("http://socrip4.kaist.ac.kr:3880/upload11");
-
+                //new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/");
                 Log.e("======================","buttonclickc");
                 /*
                 String url = "http://socrip4.kaist.ac.kr:3880/upload11";
@@ -160,7 +157,7 @@ public class MainActivity extends Activity {
                     String line = "";
                     while((line = reader.readLine()) != null){
                         buffer.append(line);
-                    }
+                    } ////여기까지 안가고 에러 뜸
                     Log.e("======3======",buffer.toString());
                     return buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
 
@@ -199,13 +196,14 @@ public class MainActivity extends Activity {
             }
             */
             //Log.e("fsd",result);
-
+            if(result==null) Log.e("result","null");
 
             byte[] bytedata = Base64.decode(result,0);
             ByteArrayInputStream inStream = new ByteArrayInputStream(bytedata);
             Bitmap bitmap = BitmapFactory.decodeStream(inStream) ;
-
             imageView.setImageBitmap(bitmap);
+
+
             //textView.setText(result);//서버로 부터 받은 값을 출력해주는 부
         }
     }
@@ -214,7 +212,7 @@ public class MainActivity extends Activity {
     public static void postData(Bitmap imageToSend) {
         try
         {
-            URL url = new URL("http://socrip4.kaist.ac.kr:3880/upload11");
+            URL url = new URL("http://socrip4.kaist.ac.kr:3980/uploadimage/hbbr");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
 
