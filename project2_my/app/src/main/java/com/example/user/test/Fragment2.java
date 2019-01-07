@@ -52,6 +52,23 @@ public class Fragment2 extends Fragment {
 
         return view;
     }
+    /*
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser)
+        {
+            if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
+                loadImage(v,getActivity());
+                Log.i("fragment2","fragment2");
+            }
+        }
+        else
+        {
+            //preload 될때(전페이지에 있을때)
+        }
+    }*/
 
     public void loadImage(View view,Context con){
         final ImageAdapter ia = new ImageAdapter(con);
