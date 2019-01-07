@@ -23,7 +23,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="280dp"
+        android:layout_marginLeft="280dp"
         android:layout_marginTop="510dp"
         android:text="LOAD"/>
+    <Button
+        android:id="@+id/dbupload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="510dp"
+        android:text="DB UPLOAD"/>
 
 </RelativeLayout>

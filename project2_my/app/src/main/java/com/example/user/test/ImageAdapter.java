@@ -23,6 +23,7 @@ public class ImageAdapter extends BaseAdapter {
     private String geoData;
     private ArrayList<String> thumbsDataList;
     private ArrayList<String> thumbsIDList;
+    private ArrayList<String> encodingResource;
 
     public ImageAdapter(Context c){
         mContext = c;
@@ -30,12 +31,20 @@ public class ImageAdapter extends BaseAdapter {
         thumbsDataList = new ArrayList<String>();
         thumbsIDList = new ArrayList<String>();
         getThumbInfo(thumbsIDList, thumbsDataList);
+        encodingResource = new ArrayList<>();
+    }
+    public ArrayList<String> getList(){
+        encodingResource=new ArrayList<>();
+        for(int i=0; i<thumbsIDList.size(); i++){
+            encodingResource.add(getImageInfo(imgData, geoData, thumbsIDList.get(i)));
+        }
+        return encodingResource;
     }
 
     public final void callImageViewer(int selectedIndex){
         Intent i = new Intent(mContext, DisplayPhoto.class);
         String imgPath = getImageInfo(imgData, geoData, thumbsIDList.get(selectedIndex));
-        i.putExtra("filename", imgPath);
+        i.putExtra("imgpath", imgPath);
         activity.startActivityForResult(i, 1);
     }
 

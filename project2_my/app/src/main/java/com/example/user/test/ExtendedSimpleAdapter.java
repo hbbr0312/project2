@@ -242,8 +242,4 @@ public class ExtendedSimpleAdapter extends SimpleAdapter{
         rBitmap = Bitmap.createScaledBitmap(oBitmap, (int) width, (int) height, true);
         return rBitmap;
     }
-
-
-
-
 }
