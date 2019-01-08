@@ -44,13 +44,6 @@
                 android:layout_marginBottom="10dp"
                 android:text="back" />
 
-            <Button
-                android:id="@+id/upload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="UPLOAD" />
-
         </LinearLayout>
 
     </FrameLayout>
