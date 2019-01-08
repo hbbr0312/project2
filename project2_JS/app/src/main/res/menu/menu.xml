@@ -5,9 +5,7 @@
     <!-- "Mark Favorite", should appear as action button if possible -->
     <item
         android:id="@+id/refresh"
-        android:icon="@drawable/e3"
+        android:icon="@drawable/plus"
         android:title="새로고침"
         app:showAsAction="ifRoom" />
-
-
 </menu>

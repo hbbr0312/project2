@@ -92,6 +92,7 @@ public class Fragment3 extends Fragment implements  View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.fab_sub2:
+                Log.e("fab_sub2","click");
                 anim();
                 downloadlist();
                 break;
@@ -113,9 +114,17 @@ public class Fragment3 extends Fragment implements  View.OnClickListener {
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab_sub1 = (FloatingActionButton) view.findViewById(R.id.fab_sub1);
+        fab_sub2 = (FloatingActionButton) view.findViewById(R.id.fab_sub2);
+
+        fab.setImageResource(R.drawable.plus);
+        fab_sub1.setImageResource(R.drawable.fup);
+        fab_sub2.setImageResource(R.drawable.fdo);
 
         fab.setOnClickListener(this);
         fab_sub1.setOnClickListener(this);
+        fab_sub2.setOnClickListener(this);
+
+        downloadlist();
 
         /*
         HashMap<String, String> contact = new HashMap<>();
@@ -175,8 +184,7 @@ public class Fragment3 extends Fragment implements  View.OnClickListener {
         data.clear();
         new downloadTask().execute("http://socrip4.kaist.ac.kr:3880/tab3down");
 
-        ListviewAdapter adapter1 = new ListviewAdapter(getActivity(),R.layout.list_feed,data);
-        lv.setAdapter(adapter1);
+
     }
 
 
@@ -231,7 +239,7 @@ public class Fragment3 extends Fragment implements  View.OnClickListener {
                     Log.e("touch","close");
 
 
-                    return buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
+                    return "{"+buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
 
                 } catch (MalformedURLException e){
                     e.printStackTrace();
@@ -282,8 +290,11 @@ public class Fragment3 extends Fragment implements  View.OnClickListener {
 
                     Listviewitem item = new Listviewitem(profile,name,id,date,image,text);
                     data.add(item);
-
                 }
+                ListviewAdapter adapter1 = new ListviewAdapter(getActivity(),R.layout.list_feed, data);
+                Log.e("sdfsdfsd","sdfsdfsdf");
+                lv.setAdapter(adapter1);
+
             } catch (JSONException e) {
                 Log.e("json", "error");
                 e.printStackTrace();

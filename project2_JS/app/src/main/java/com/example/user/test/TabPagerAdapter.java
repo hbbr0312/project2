@@ -42,6 +42,13 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
                 tabFragment1.setArguments(bundle1);
                 return tabFragment1;
 
+            case 2:
+                Fragment2 tabFragment3 = new Fragment2();
+                Bundle bundle3= new Bundle();
+                bundle3.putString("id",user_id);
+                tabFragment3.setArguments(bundle3);
+                return tabFragment3;
+
             case 1:
                 Fragment3 tabFragment2 = new Fragment3();
                 Bundle bundle2 = new Bundle();
@@ -49,13 +56,6 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
                 bundle2.putString("name",user_name);
                 tabFragment2.setArguments(bundle2);
                 return tabFragment2;
-
-            case 2:
-                Fragment2 tabFragment3 = new Fragment2();
-                Bundle bundle3= new Bundle();
-                bundle3.putString("id",user_id);
-                tabFragment3.setArguments(bundle3);
-                return tabFragment3;
 
             default :
                 return null;

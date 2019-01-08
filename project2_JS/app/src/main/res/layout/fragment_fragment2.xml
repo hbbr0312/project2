@@ -1,38 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<RelativeLayout
-    android:layout_height="match_parent"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <GridView
-        android:id="@+id/ImgGridView"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragment1"
+    android:orientation="vertical">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnWidth="8dp"
-        android:numColumns="4"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_centerInParent="true"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"/>
-    <Button
-        android:id="@+id/loadi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="280dp"
-        android:layout_marginLeft="280dp"
-        android:layout_marginTop="510dp"
-        android:text="LOAD"/>
-    <Button
-        android:id="@+id/dbupload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="510dp"
-        android:text="DB UPLOAD"/>
+        android:layout_height="match_parent">
+        <GridView
+            android:id="@+id/ImgGridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="8dp"
+            android:numColumns="4"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_centerInParent="true"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:stretchMode="columnWidth"
+            android:gravity="center"/></LinearLayout>
 
-</RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_sub1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="120dp"
+        android:layout_marginRight="15sp"
+        android:visibility="invisible"
+        app:backgroundTint="#222222"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:text = "upload"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_sub2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="15sp"
+        android:visibility="invisible"
+        app:backgroundTint="#222222"
+        app:elevation="6dp"
+        app:pressedTranslationZ="12dp"
+        android:text = "download"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="15sp"
+        android:background="#0000" />
+
+
+
+</android.support.design.widget.CoordinatorLayout>

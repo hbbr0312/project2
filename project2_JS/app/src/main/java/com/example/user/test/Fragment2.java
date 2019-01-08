@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -41,48 +46,105 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class Fragment2 extends Fragment {
+public class Fragment2 extends Fragment implements View.OnClickListener {
     private GridView gv;
     private Button upload;
     private ArrayList<String> uploadList;
     private Bitmap bm;
     private JSONObject img;
     private int du;
+    private FloatingActionButton fab, fab_sub1, fab_sub2;
+    private Boolean isFabOpen = false;
+    private Animation fab_open, fab_close;
+    private ArrayList<Listviewitem> data = new ArrayList<>();
+    private ImageAdapter ia;
+    private View v;
+    private String user_id;
+
+    public void anim(){
+        if(isFabOpen){
+            fab_sub1.startAnimation(fab_close);
+            fab_sub2.startAnimation(fab_close);
+
+            fab_sub1.setClickable(false);
+            fab_sub2.setClickable(false);
+
+            isFabOpen = false;
+        }
+
+        else {
+            fab_sub1.startAnimation(fab_open);
+            fab_sub2.startAnimation(fab_open);
+
+            fab_sub2.setClickable(true);
+            fab_sub1.setClickable(true);
+
+            isFabOpen = true;
+        }
+    }
+
+    public void onClick(View v){
+        int id = v.getId();
+        switch(id){
+            case R.id.fab:
+                anim();
+                //Toast.makeText(this,"Floating Action", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.fab_sub1:
+                anim();
+                Log.e("uploading...", "....");
+                uploadList = ia.getList();
+                Log.e("uploadList size", "" + uploadList.size());
+                uploadimage();
+                break;
+            case R.id.fab_sub2:
+                anim();
+                downloadimage();
+                break;
+        }
+    }
 
     public Fragment2() {
     }
 
-    View v;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fragment2, container, false);
         v = view;
         Log.i("fragment2", "onCreateView");
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
+        user_id = getArguments().getString("id");
+        fab_open = AnimationUtils.loadAnimation(getActivity(), R.anim.fab_open);
+        fab_close= AnimationUtils.loadAnimation(getActivity(), R.anim.fab_close);
+
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab_sub1 = (FloatingActionButton) view.findViewById(R.id.fab_sub1);
+        fab_sub2 = (FloatingActionButton) view.findViewById(R.id.fab_sub2);
+
+        fab.setImageResource(R.drawable.image);
+        fab_sub1.setImageResource(R.drawable.upload);
+        fab_sub2.setImageResource(R.drawable.download);
+
+        fab.setOnClickListener(this);
+        fab_sub1.setOnClickListener(this);
+        fab_sub2.setOnClickListener(this);
 
         gv = (GridView) view.findViewById(R.id.ImgGridView);
-        Button download = (Button) view.findViewById(R.id.loadi);
-        download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadimage();
-                //new downloadTask().execute("http://socrip4.kaist.ac.kr:3980/image/hbbr");
-            }
-        });
-
 
         if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
             Log.e("permission Image", "true");
-            loadImage(view, getActivity());
+            loadImage(getActivity());
         }
 
 
         return view;
     }
 
+    /**TODO:Fragment2로 넘어가면 loadimage*/
+    /*
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -90,31 +152,20 @@ public class Fragment2 extends Fragment {
         if (isVisibleToUser) {
 
             if (checkPermissionREAD_EXTERNAL_STORAGE(getActivity())) {
-                loadImage(v, getActivity());
+                loadImage(getActivity());
                 Log.i("fragment2", "fragment2");
             }
         } else {
             //preload 될때(전페이지에 있을때)
         }
-    }
+    }*/
 
-    public void loadImage(View view, Context con) {
-        final ImageAdapter ia = new ImageAdapter(con);
+    public void loadImage(Context con) {
+        ia = new ImageAdapter(con);
         gv.setAdapter(ia);
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 ia.callImageViewer(position);
-            }
-        });
-        upload = (Button) view.findViewById(R.id.dbupload);
-        upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("uploading...", "....");
-                uploadList = ia.getList();
-                Log.e("uploadList size", "" + uploadList.size());
-                uploadimage();
-                //new uploadTask().execute("http://socrip4.kaist.ac.kr:3980/uploadimage/hbbr");
             }
         });
     }
@@ -123,6 +174,7 @@ public class Fragment2 extends Fragment {
      * Permission
      */
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+    public static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 123;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -176,6 +228,36 @@ public class Fragment2 extends Fragment {
         }
     }
 
+    public boolean checkPermissionWRITE_EXTERNAL_STORAGE(
+            final Context context) {
+        Log.i("fragment2", "checkPermissionWRITE_EXTERNAL_STORAGE");
+        int currentAPIVersion = Build.VERSION.SDK_INT;
+        if (currentAPIVersion >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        (Activity) context,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    showDialog("External storage", context,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                } else {
+                    ActivityCompat
+                            .requestPermissions(
+                                    (Activity) context,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                }
+                return false;
+            } else {
+                return true;
+            }
+
+        } else {
+            return true;
+        }
+    }
+
     public void showDialog(final String msg, final Context context,
                            final String permission) {
         Log.i("fragment2", "showDialog");
@@ -195,6 +277,7 @@ public class Fragment2 extends Fragment {
         alert.show();
     }
 
+    /**IMAGES ENCODING*/
     public String encoding(String imgPath) {
         Log.i("encoding...", imgPath);
         bm = BitmapFactory.decodeFile(imgPath);
@@ -207,18 +290,16 @@ public class Fragment2 extends Fragment {
     public void uploadimage() {
         du=0;
         Log.i("upload..","start");
-        new JSONTask().execute("http://socrip4.kaist.ac.kr:3880/uploadimage/hbbr");
+        new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/uploadimage/"+user_id);
     }
 
     public void downloadimage() {
         du=1;
         Log.i("download..","start");
-        new JSONTask().execute("http://socrip4.kaist.ac.kr:3880/image/hbbr");
+        new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/image/"+user_id);
     }
 
-    /**
-     * 업로드
-     **/
+    /**사진 업로드 다운로드*/
     public class JSONTask extends AsyncTask<String, String, String> {
 
         @Override
@@ -281,7 +362,6 @@ public class Fragment2 extends Fragment {
                         reader = new BufferedReader(new InputStreamReader(stream));
                         reader.read();
 
-
                         StringBuffer buffer = new StringBuffer();
                         String line;
 
@@ -289,15 +369,11 @@ public class Fragment2 extends Fragment {
                             buffer.append(line);
                         }
                         reader.close();
-                        Log.i("server said ", buffer.toString());
-                        if (j ==forloop - 1) return buffer.toString();
 
-                        if (buffer.toString() == "saved" || buffer.toString() == "img already exists") {
-                            Log.i("server said ", buffer.toString());
-                            Log.i("..........", j + "th img");
-                            if (j == uploadList.size() - 1) return "{"+buffer.toString()+"}";
-                            continue;
-                        } else break;
+                        String answer = buffer.toString();
+                        answer = "{"+answer;
+
+                        if (j == forloop - 1) return answer;
 
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
@@ -327,50 +403,35 @@ public class Fragment2 extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            if (du==0) return;
+            if (result == null) return;
 
 
-            if (result != "saved" && result != "nothing") {
+            if (du==1) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
-                    //Iterator x = jsonObject.keys();
-                    JSONArray json = jsonObject.getJSONArray("images");
 
-                    /*
-                    while (x.hasNext()) {
-                        String key = (String) x.next();
-                        json.put(jsonObject.get(key));
-                    }
-                    */
+                    JSONArray json = jsonObject.getJSONArray("images");
 
                     Log.e("json", "process");
                     for (int i = 0; i < json.length(); i++) {
-                        Log.e("for", "error");
+                        //Log.e("for", "error");
                         JSONObject iter = json.getJSONObject(i);
                         String name = iter.getString("name");
                         Log.e("imgname is ", name);
                         String img = iter.getString("img");
-
                         byte[] bytedata = Base64.decode(img, 0);
+                        ByteArrayInputStream inStream = new ByteArrayInputStream(bytedata);
+                        Bitmap bitmap = BitmapFactory.decodeStream(inStream) ;
+                        MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap,name,"downloaded from mongodb");
 
-                        //addContact(name,bytedata);
                     }
                 } catch (JSONException e) {
                     Log.e("json", "error");
                     e.printStackTrace();
                 }
-                Log.e("load", "error");
-                //loadContacts();
+                Log.e("download", "complete");
             }
-
-            /*
-
-            Log.e("result",""+result);
-            Log.e("onPostExecute","i will decode");
-            byte[] bytedata = Base64.decode(result,0);
-            ByteArrayInputStream inStream = new ByteArrayInputStream(bytedata);
-            Bitmap bitmap = BitmapFactory.decodeStream(inStream) ;
-            //iv.setImageBitmap(bitmap);*/
         }
     }
 }
+

@@ -139,6 +139,10 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
         fab_sub1 = (FloatingActionButton) view.findViewById(R.id.fab_sub1);
         fab_sub2 = (FloatingActionButton) view.findViewById(R.id.fab_sub2);
 
+        fab.setImageResource(R.drawable.call);
+        fab_sub1.setImageResource(R.drawable.phoneup);
+        fab_sub2.setImageResource(R.drawable.phonedo);
+
         fab.setOnClickListener(this);
         fab_sub1.setOnClickListener(this);
         fab_sub2.setOnClickListener(this);
@@ -146,20 +150,20 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
 
 
         if (askForContactPermission(getActivity())) {
-                loadContacts();
-                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        //Data data = contactList.get(position);
-                        HashMap<String,String> data = contactList.get(position);//값 전달
-                        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + data.get("mobile")));
-                        Bundle bundle = new Bundle();
-                        bundle.putString(ContactsContract.Intents.Insert.PHONE, data.get("mobile"));
-                        intent.putExtras(bundle);
+            loadContacts();
+            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //Data data = contactList.get(position);
+                    HashMap<String,String> data = contactList.get(position);//값 전달
+                    Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + data.get("mobile")));
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ContactsContract.Intents.Insert.PHONE, data.get("mobile"));
+                    intent.putExtras(bundle);
 
-                        startActivity(intent);
-                    }
-                });
+                    startActivity(intent);
+                }
+            });
         }
 
 
@@ -567,24 +571,24 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
                             name).build());
         }
 
-        if (email != null) {
+        if (mobile != null) {
             ops.add(ContentProviderOperation.
                     newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE,
                             ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, email)
+                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, mobile)
                     .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
                             ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
                     .build());
         }
 
-        if (mobile != null) {
+        if (email != null) {
             ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
                     .withValue(ContactsContract.Data.MIMETYPE,
                             ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-                    .withValue(ContactsContract.CommonDataKinds.Email.DATA, mobile)
+                    .withValue(ContactsContract.CommonDataKinds.Email.DATA, email)
                     .withValue(ContactsContract.CommonDataKinds.Email.TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
                     .build());
         }
@@ -618,29 +622,22 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
         @Override
         protected String doInBackground(String... urls) {
             try {
-                //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
 
+                JSONObject jsonObject = new JSONObject();
                 if (isUP) {
-                    for (int i = 0 ; i < jsonArray.length(); i ++ ){
+                    for (int j = 0; j < jsonArray.length(); j++) {
+                        //JSONObject를 만들고 key value 형식으로 값을 저장해준다.
+                        jsonObject = jsonArray.getJSONObject(j);
+                        jsonObject.accumulate("user_id", user_id);
+
                         HttpURLConnection con = null;
                         BufferedReader reader = null;
 
-                        try{
-                            //URL url = new URL("http://192.168.25.16:3000/users");
-
-
+                        try {
                             URL url = new URL(urls[0]);
                             //연결을 함
-                            Log.e("url",urls[0]);
-                            con = (HttpURLConnection) url.openConnection();
 
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            //jsonObject.accumulate("contacts", jsonArray);
-                            jsonObject.accumulate("user_id",user_id);
-//                    jsonObject.accumulate("name",);
-//                    jsonObject.accumulate("email",);
-//                    jsonObject.accumulate("mobile");
-//                    jsonObject.accumulate("img");
+                            con = (HttpURLConnection) url.openConnection();
 
                             con.setRequestMethod("POST");//POST방식으로 보냄
                             con.setRequestProperty("Cache-Control", "no-cache");//캐시 설정
@@ -655,59 +652,55 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
 
                             //버퍼를 생성하고 넣음
                             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outStream));
-                            Log.e("====1====",jsonObject.toString());
-                            writer.write(jsonObject.toString());
-                            Log.e("====2====",jsonObject.toString());
+                            writer.write(jsonObject.toString() + "\n");
                             writer.flush();
-                            Log.e("====3====",jsonObject.toString());
                             writer.close();//버퍼를 받아줌
-                            Log.e("====4====",jsonObject.toString());
 
                             //서버로 부터 데이터를 받음
                             InputStream stream = con.getInputStream();
-                            Log.e("===5=====",jsonObject.toString());
+                            Log.e("enter", "input stream");
 
                             reader = new BufferedReader(new InputStreamReader(stream));
                             reader.read();
 
-                            Log.e("====6====",jsonObject.toString());
-                            StringBuffer buffer = new StringBuffer();
 
-                            String line = "";
-                            while((line = reader.readLine()) != null){
+                            StringBuffer buffer = new StringBuffer();
+                            String line;
+
+                            while ((line = reader.readLine()) != null) {
                                 buffer.append(line);
                             }
-                            Log.e("======3======",buffer.toString());
                             reader.close();
-                            return "{"+buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
+                            Log.i("server said ", buffer.toString());
 
-                        } catch (MalformedURLException e){
+
+
+                        } catch (MalformedURLException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         } finally {
-                            if(con != null){
+                            if (con != null) {
                                 con.disconnect();
                             }
                             try {
-                                if(reader != null){
+                                if (reader != null) {
                                     reader.close();//버퍼를 닫아줌
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
-                    }
 
-                    }else{
+                    }
+                }else{
                     HttpURLConnection con = null;
                     BufferedReader reader = null;
 
-                    try{
-                        //URL url = new URL("http://192.168.25.16:3000/users");
+                    try {
                         URL url = new URL(urls[0]);
                         //연결을 함
-                        Log.e("url",urls[0]);
+
                         con = (HttpURLConnection) url.openConnection();
 
                         con.setRequestMethod("POST");//POST방식으로 보냄
@@ -729,25 +722,32 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
 
                         //서버로 부터 데이터를 받음
                         InputStream stream = con.getInputStream();
-                        reader = new BufferedReader(new InputStreamReader(stream));
-                        StringBuffer buffer = new StringBuffer();
+                        Log.e("enter", "input stream");
 
-                        String line = "";
-                        while((line = reader.readLine()) != null){
+                        reader = new BufferedReader(new InputStreamReader(stream));
+                        reader.read();
+
+
+                        StringBuffer buffer = new StringBuffer();
+                        String line;
+
+                        while ((line = reader.readLine()) != null) {
                             buffer.append(line);
                         }
-                        return "{"+buffer.toString();//서버로 부터 받은 값을 리턴해줌 아마 OK!!가 들어올것임
+                        reader.close();
+                        Log.i("server said ", buffer.toString());
 
-                    } catch (MalformedURLException e){
+                        return "{"+buffer.toString();
+                    } catch (MalformedURLException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
-                        if(con != null){
+                        if (con != null) {
                             con.disconnect();
                         }
                         try {
-                            if(reader != null){
+                            if (reader != null) {
                                 reader.close();//버퍼를 닫아줌
                             }
                         } catch (IOException e) {
@@ -756,12 +756,14 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
                     }
 
                 }
-            } catch (Exception e) {
+
+
+
+            } catch(Exception e){
                 e.printStackTrace();
             }
 
             return null;
-
 
         }
 
@@ -790,7 +792,7 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
                 try {
                     JSONObject jsonObject = new JSONObject(result);
                     JSONArray json = jsonObject.getJSONArray("contacts");
-                    Log.e("json", "process");
+                    //Log.e("json", "process");
                     for (int i = 0; i < json.length(); i++) {
                         Log.e("for", "error");
                         JSONObject iter = json.getJSONObject(i);
@@ -803,18 +805,19 @@ public class Fragment1 extends Fragment implements  View.OnClickListener{
 
                         addContact(name, email, mobile, bytedata);
                     }
+                    Toast.makeText(getActivity(),"Download Complete!",Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     Log.e("json", "error");
                     e.printStackTrace();
                 }
-                Log.e("load", "error");
+                //Log.e("load", "error");
                 loadContacts();
             } else{
                 Toast.makeText(getActivity(),"Upload Complete!",Toast.LENGTH_SHORT).show();
             }
 
 
-            Log.e("af","post");
+            //Log.e("af","post");
 
             //textView.setText(result);//서버로 부터 받은 값을 출력해주는 부
         }

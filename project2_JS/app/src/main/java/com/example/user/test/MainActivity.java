@@ -67,17 +67,6 @@ public class MainActivity extends AppCompatActivity {
         AccessToken accessToken = AccessToken.getCurrentAccessToken();
         final boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 
-        Button maintain = (Button) findViewById(R.id.button2);
-        maintain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(isLoggedIn){
-                    nextActivity();
-                }
-                else Toast.makeText(MainActivity.this,"Login information does not exist.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
 
         loginButton.setReadPermissions(Arrays.asList("public_profile", "email"));
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
