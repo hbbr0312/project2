@@ -77,13 +77,13 @@ public class Fragment3 extends Fragment {
         */
 
         /**TEST*/
-        ArrayList<Listviewitem> data = new ArrayList<>();
+        /*ArrayList<Listviewitem> data = new ArrayList<>();
         Listviewitem item0 = new Listviewitem("null","heo","hbbr1","20180808","/storage/emulated/0/Download/9S4QWSR0_400x400.jpg","오늘은 스폰지밥을 봤다");
         Listviewitem item1 = new Listviewitem("null","heo","hbbr1","20180808","/storage/emulated/0/Download/9S4QWSR0_400x400.jpg","오늘도 봤다");
         data.add(item0);
         data.add(item1);
         ListviewAdapter adapter1 = new ListviewAdapter(getActivity(),R.layout.list_feed,data);
-        lv.setAdapter(adapter1);
+        lv.setAdapter(adapter1);*/
 
 
 

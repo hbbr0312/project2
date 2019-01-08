@@ -99,7 +99,7 @@ public class ProjectActivity extends AppCompatActivity{
 
         //탭에 아이콘 넣는 부분//
         tabLayout.getTabAt(0).setIcon(R.drawable.agenda);
-        tabLayout.getTabAt(2).setIcon(R.drawable.photoalbum);
+        tabLayout.getTabAt(1).setIcon(R.drawable.photoalbum);
         //tabLayout.getTabAt(2).setIcon(R.drawable.player);
     }
 
