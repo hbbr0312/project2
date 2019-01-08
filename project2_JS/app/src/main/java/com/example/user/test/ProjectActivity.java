@@ -102,9 +102,9 @@ public class ProjectActivity extends AppCompatActivity{
         tabLayout.setupWithViewPager(viewPager);
 
         //탭에 아이콘 넣는 부분//
-        tabLayout.getTabAt(0).setIcon(R.drawable.tele);
-        tabLayout.getTabAt(1).setIcon(R.drawable.photoalbum);
-        //tabLayout.getTabAt(2).setIcon(R.drawable.player);
+        tabLayout.getTabAt(0).setIcon(R.drawable.agenda);
+        tabLayout.getTabAt(1).setIcon(R.drawable.feed);
+        tabLayout.getTabAt(2).setIcon(R.drawable.photoalbum);
     }
 
 }

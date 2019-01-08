@@ -116,7 +116,7 @@ public class Fragment3 extends Fragment implements  View.OnClickListener {
         fab_sub1 = (FloatingActionButton) view.findViewById(R.id.fab_sub1);
         fab_sub2 = (FloatingActionButton) view.findViewById(R.id.fab_sub2);
 
-        fab.setImageResource(R.drawable.plus);
+        fab.setImageResource(R.drawable.plus1);
         fab_sub1.setImageResource(R.drawable.fup);
         fab_sub2.setImageResource(R.drawable.fdo);
 

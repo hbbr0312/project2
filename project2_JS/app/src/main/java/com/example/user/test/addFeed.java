@@ -60,12 +60,12 @@ public class addFeed extends AppCompatActivity {
         content_img = (ImageView) findViewById(R.id.fphoto);
         button = (Button) findViewById(R.id.uploadbtn);
         editText = (EditText) findViewById(R.id.fedit);
-        date = (TextView) findViewById(R.id.fdate);
+        //date = (TextView) findViewById(R.id.fdate);
         name = (TextView) findViewById(R.id.fname);
-        id = (TextView) findViewById(R.id.fid);
+        date = (TextView) findViewById(R.id.fid);
 
         new DownloadImage().execute("https://graph.facebook.com/"+ user_id + "/picture?type=small");
-        id.setText(user_id);
+        //id.setText(user_id);
         name.setText(user_name);
         date.setText(cur_date);
 
@@ -93,7 +93,7 @@ public class addFeed extends AppCompatActivity {
 
 
     private String getTime(){
-        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         long mNow = System.currentTimeMillis();
         Date mDate = new Date(mNow);
         return mFormat.format(mDate);
@@ -204,7 +204,7 @@ public class addFeed extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Toast.makeText(getApplicationContext(),"Upload Complete!",Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 

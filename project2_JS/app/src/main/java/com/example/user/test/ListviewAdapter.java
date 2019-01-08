@@ -44,10 +44,10 @@ public class ListviewAdapter extends BaseAdapter {
         name.setText(listviewitem.getName());
         /**아이디*/
         TextView id=(TextView)convertView.findViewById(R.id.fid);
-        id.setText(listviewitem.getId());
+        id.setText(listviewitem.getDate());
         /**날짜*/
-        TextView date=(TextView)convertView.findViewById(R.id.fdate);
-        date.setText(listviewitem.getDate());
+        //TextView date=(TextView)convertView.findViewById(R.id.fdate);
+        //date.setText(listviewitem.getDate());
         /**사진*/
         ImageView photo=(ImageView)convertView.findViewById(R.id.fphoto);
         photo.setImageBitmap(listviewitem.getPhoto());

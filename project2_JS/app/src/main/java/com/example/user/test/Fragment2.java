@@ -290,13 +290,13 @@ public class Fragment2 extends Fragment implements View.OnClickListener {
     public void uploadimage() {
         du=0;
         Log.i("upload..","start");
-        new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/uploadimage/"+user_id);
+        new JSONTask().execute("http://socrip4.kaist.ac.kr:3880/uploadimage/"+user_id);
     }
 
     public void downloadimage() {
         du=1;
         Log.i("download..","start");
-        new JSONTask().execute("http://socrip4.kaist.ac.kr:3980/image/"+user_id);
+        new JSONTask().execute("http://socrip4.kaist.ac.kr:3880/image/"+user_id);
     }
 
     /**사진 업로드 다운로드*/
@@ -423,13 +423,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener {
                         ByteArrayInputStream inStream = new ByteArrayInputStream(bytedata);
                         Bitmap bitmap = BitmapFactory.decodeStream(inStream) ;
                         MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap,name,"downloaded from mongodb");
-
                     }
+                    Toast.makeText(getActivity(),"Download Complete!",Toast.LENGTH_SHORT).show();
+
                 } catch (JSONException e) {
                     Log.e("json", "error");
                     e.printStackTrace();
                 }
                 Log.e("download", "complete");
+            } else{
+                loadImage(getActivity());
+                Toast.makeText(getActivity(),"Upload Complete!",Toast.LENGTH_SHORT).show();
+
             }
         }
     }
