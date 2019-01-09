@@ -425,6 +425,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener {
                         MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), bitmap,name,"downloaded from mongodb");
                     }
                     Toast.makeText(getActivity(),"Download Complete!",Toast.LENGTH_SHORT).show();
+                    loadImage(getActivity());
 
                 } catch (JSONException e) {
                     Log.e("json", "error");
@@ -432,7 +433,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener {
                 }
                 Log.e("download", "complete");
             } else{
-                loadImage(getActivity());
+
                 Toast.makeText(getActivity(),"Upload Complete!",Toast.LENGTH_SHORT).show();
 
             }
